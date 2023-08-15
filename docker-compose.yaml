@@ -1,0 +1,42 @@
+version: '3.9'
+
+services:
+  
+  phpFPM:
+    container_name: php_fpm
+    image: php:fpm-alpine
+    restart:
+      on-failure
+    volumes:
+     - ./app/www/:/./var/www/html
+    networks:
+      - inside
+    expose:
+      - 9000
+
+  nginx:
+    container_name: nginx
+    build: 
+      dockerfile: ./nginx/dockerfile
+    image: nginx:alpine
+    depends_on:
+      - phpFPM
+    ports:
+      - "8080:80"
+    volumes:
+     - ./app/www/:/./var/www/html
+    restart:
+      on-failure
+    networks:
+      - inside
+      - myNet
+
+networks:
+  myNet:
+    driver: bridge
+
+  inside: 
+    internal: true
+    driver: bridge
+
+         

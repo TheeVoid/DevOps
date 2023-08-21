@@ -3,40 +3,38 @@ version: '3.9'
 services:
   
   phpFPM:
-    container_name: php_fpm
+    container_name: p_php_fpm
     image: php:fpm-alpine
     restart:
       on-failure
     volumes:
-     - ./app/www/:/./var/www/html
-    networks:
-      - inside
+     - /./home/ubuntu/project/app/index.php:/./var/www/html/index.php
+     - /./home/ubuntu/project/app/index2.php:/./var/www/html/index2.php
     expose:
       - 9000
+    hostname: php_fpm
 
   nginx:
-    container_name: nginx
-    build: 
-      dockerfile: ./nginx/dockerfile
+    container_name: p_nginx
     image: nginx:alpine
     depends_on:
       - phpFPM
     ports:
-      - "8080:80"
+      - "80:80"
+      - "443:443"
     volumes:
-     - ./app/www/:/./var/www/html
+     - /./home/ubuntu/project/nginx/config/conf.d/:/etc/nginx/conf.d/
+     - /./home/ubuntu/project/app/index.php:/./var/www/html/index.php
+     - /./home/ubuntu/project/app/index2.php:/./var/www/html/index2.php
+     - /./home/ubuntu/project/nginx/config/nginx.conf:/./etc/nginx/nginx.conf
     restart:
       on-failure
-    networks:
-      - inside
-      - myNet
+    hostname: nginx
+    build: 
+      context: ./nginx  
+      dockerfile: ./dockerfile
 
-networks:
-  myNet:
-    driver: bridge
 
-  inside: 
-    internal: true
-    driver: bridge
+
 
          

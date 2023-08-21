@@ -1,4 +1,1 @@
 FROM nginx:alpine
-ADD ./config/nginx.conf /./etc/nginx
-ADD  config C:/Users/adam/Documents/project/nginx/config://config/php.conf 
-CMD ["cd", "/./etc/nginx/conf.d"; "rm", "default.conf"; "nginx", "-s", "reload"]
